@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # Compliance Artefact Generator Script
 
-This script takes a dataset that meets the Orcro licence list definition, and produces generalized compliance artefacts.
+This script takes a dataset that meets the Orcro licence list definition, and produces generalized compliance artefacts that are suitable for use in an OpenChain compliant program.
 
 <div align="center">
 
@@ -22,7 +22,7 @@ The recommended way to use this script is from a shell:
 Rscript generate-artefacts.R LicenceList.csv
 ```
 
-All output will be placed into the directory that the command was run from.
+Generated artefacts will be placed into the directory that the command was run from. The licence list should be encoded in UTF-8 and be present in the working directory.
 
 ## Licence
 
