@@ -10,7 +10,7 @@ This script takes a dataset that meets the Orcro licence list definition, and pr
 
 <div align="center">
 
-[![REUSE status](https://api.reuse.software/badge/github.com/galacticalex/compliance-artefact-generator)](https://api.reuse.software/info/github.com/galacticalex/compliance-artefact-generator) [![GitHub](https://img.shields.io/github/license/galacticalex/contractAssembler)](https://img.shields.io/github/license/galacticalex/compliance-artefact-generator)
+[![REUSE status](https://api.reuse.software/badge/github.com/galacticalex/compliance-artefact-generator)](https://api.reuse.software/info/github.com/galacticalex/compliance-artefact-generator) [![GitHub](https://img.shields.io/github/license/galacticalex/compliance-artefact-generator)](https://img.shields.io/github/license/galacticalex/compliance-artefact-generator)
 
 </div>
 
