@@ -6,7 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # Compliance Artefact Generator Script
 
-This script takes a dataset that meets the Orcro licence list definition, and produces generalized compliance artefacts that are suitable for use in an OpenChain compliant program.
+This script takes a dataset that meets the Orcro licence list definition, and produces generalized compliance artefacts that are suitable for use in an [OpenChain](https://www.openchainproject.org/) compliant program.
 
 <div align="center">
 
@@ -39,3 +39,5 @@ This program and the accompanying materials are made available under the terms o
 :house_with_garden: Orcro Ltd. team@orcro.co.uk
 
 :hammer: Maintainer alexander.murphy@orcro.co.uk
+
+:computer: Website [orcro.co.uk](https://orcro.co.uk)
