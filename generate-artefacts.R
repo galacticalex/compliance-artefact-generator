@@ -16,9 +16,9 @@
 # 
 # 107. Function Definitions
 # 
-# 176. Program Logic
+# 198. Program Logic
 # 
-# 195. Environment Cleanup
+# 217 Environment Cleanup
 # 
 ##
 
@@ -108,63 +108,85 @@ genericFileContent = c(overviewText, appendixAText, appendixBText)
 ##
 
 outputFile = function(fileText, fileName) {
-  write(x = fileText, file = fileName)
+    write(x = fileText, file = fileName)
 }
 
 generateOverviewText = function(softwareName, componentNames, licences) {
-  
-  dat = as.data.frame(cbind(softwareName, 
-                            componentNames, 
-                            licences))
-  
-  dat = split(dat, dat$softwareName)
-  
-  t = function(d) {
-    header = paste0("\n\n### ", d[1, 1], "\n\n")
     
-    rest = paste0(rep("Component: ", length(d[2])), 
-                  unlist(d[2]), 
-                  rep(" - Licence: ", length(d[3])), 
-                  unlist(d[3]), 
-                  rep("\n", 4), collapse = "")
+    dat = as.data.frame(cbind(softwareName, 
+                              componentNames, 
+                              licences))
     
-    paste0(header, rest)
-  }
-  
-  pre_out = lapply(dat, t)
-  
-  out = paste0(pre_out, collapse = "")
-  
-  paste0(overviewText, out)
+    dat = split(dat, dat$softwareName)
+    
+    t = function(d) {
+        header = paste0("\n\n### ", d[1, 1], "\n\n")
+        
+        rest = paste0(rep("Component: ", length(d[2])), 
+                      unlist(d[2]), 
+                      rep(" - Licence: ", length(d[3])), 
+                      unlist(d[3]), 
+                      rep("\n", 4), collapse = "")
+        
+        paste0(header, rest)
+    }
+    
+    pre_out = lapply(dat, t)
+    
+    out = paste0(pre_out, collapse = "")
+    
+    paste0(overviewText, out)
 }
 
 generateAppendixA = function(licences, deps_licences) {
-  l = unique(c(licences, deps_licences))
-  l # todo: remove n/a, split AND and re-unique-ify
+    d = unlist(strsplit(deps_licences, " AND "))
+    l = unique(c(licences, d))
+    l = l[l != "N/A"]
+    first = rep("https://raw.githubusercontent.com/spdx/license-list-data/master/text/", length(l))
+    last = rep(".txt", length(l))
+    
+    dls = paste0(first, l, last)
+    
+    out = appendixAText
+    
+    cat("\n\n Licence texts will now be downloaded...\n\n")
+    
+    Sys.sleep(2)
+    
+    for (l in dls) {
+        download.file(l, destfile = "licence.tmp", 
+                      method = "wget", 
+                      quite = TRUE)
+        out = paste0(out, "\n\n--------------------\n\n", 
+                     readChar("licence.tmp", file.info("licence.tmp")$size))
+        file.remove("licence.tmp")
+    }
+    
+    out
 }
 
 generateAppendixB = function() {
-  
+    
 }
 
 generateArtefacts = function(L) {
-  
-  data = L
-  
-  # test
-  print(dim(data))
-  
-  outputFile(generateOverviewText(data[[1]], 
-                                  data[[2]], 
-                                  data[[4]]), 
-             artefactFileNames[1])
-  
-  outputFile(generateAppendixA(data[[4]], 
-                               data[[8]]), 
-             artefactFileNames[2])
-  
-  outputFile(genericFileContent[3], 
-             artefactFileNames[3])
+    
+    data = L
+    
+    # test
+    print(dim(data))
+    
+    outputFile(generateOverviewText(data[[1]], 
+                                    data[[2]], 
+                                    data[[4]]), 
+               artefactFileNames[1])
+    
+    outputFile(generateAppendixA(data[[4]], 
+                                 data[[8]]), 
+               artefactFileNames[2])
+    
+    outputFile(genericFileContent[3], 
+               artefactFileNames[3])
 }
 
 ##
@@ -177,13 +199,13 @@ generateArtefacts = function(L) {
 ##
 
 if (length(args) != 1) {
-  cat(errorMessages[1])
+    cat(errorMessages[1])
 } else if (artefactFileNames %in% dir()) {
-  cat(errorMessages[2])
+    cat(errorMessages[2])
 } else if (file.exists(args)) {
-  generateArtefacts(read.csv(args))
+    generateArtefacts(read.csv(args))
 } else {
-  cat(errorMessages[3])
+    cat(errorMessages[3])
 }
 
 ##
