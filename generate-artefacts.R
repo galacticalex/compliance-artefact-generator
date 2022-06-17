@@ -12,13 +12,13 @@
 # 
 # 46. Error Message Definitions
 # 
-# 82. File Content Defintions
+# 84. File Content Defintions
 # 
-# 107. Function Definitions
+# 109. Function Definitions
 # 
-# 198. Program Logic
+# 221. Program Logic
 # 
-# 217 Environment Cleanup
+# 240. Environment Cleanup
 # 
 ##
 
@@ -47,15 +47,17 @@ args = commandArgs(trailingOnly = T)
 ##
 
 errorHeader = "\n\x1b[31;1mError.\x1b[0m See details:\n\n"
-errorFooter = "\n\nFor support, contact \x1b[31mteam@orcro.co.uk\x1b[0m\n\n"
+errorFooter = "\n\n\x1b[31mteam@orcro.co.uk\x1b[0m\n\n"
 
 #1
 errorArgsNumber = paste0(errorHeader, 
-                         "The command should have a single argument.", 
+                         "The command should have two arguments.", 
                          "The command should look like this:\n\n\t", 
-                         "Rscript generate-artefacts.R \x1b[36mLicenceList\x1b[0m.csv\n\n", 
-                         "Replace \x1b[36mLicenceList\x1b[0m with the name of ", 
-                         "your licence list file.", 
+                         "Rscript generate-artefacts.R \x1b[36mLicenceList\x1b[0m.csv ", 
+                         "\x1b[36mScancodeOutput\x1b[0m.csv\n\n", 
+                         "Replace \x1b[36mLicenceList\x1b[0m and ", 
+                         "\x1b[36mScancodeOutput\x1b[0m with the names of ", 
+                         "your data files.", 
                          errorFooter)
 #2
 errorFileExists = paste0(errorHeader, 
@@ -165,16 +167,35 @@ generateAppendixA = function(licences, deps_licences) {
     out
 }
 
-generateAppendixB = function() {
+generateAppendixB = function(files, licences, copyrights) {
+    out = appendixBText
     
+    d = as.data.frame(cbind(files, licences, copyrights))
+    
+    d = d[d$licences != "" | d$copyrights != "", ]
+    
+    d = merge(d, d, by = 1)
+    
+    d = d[d$copyrights.x != "" & d$licences.y != "", ]
+    
+    d = d[c(1, 3, 4)]
+    
+    d$files = gsub("^sources/", "", d$files)
+    
+    for (i in 1:nrow(d)) {
+        entry = paste0("\n\n---------------\n", 
+                       "\nFile: ", d[i, 1],
+                       "\nLicence: ", d[i, 2], 
+                       "\nCopyright statement(s): ", d[i, 3])
+        out = paste0(out, entry)
+    }
+    
+    out
 }
 
-generateArtefacts = function(L) {
-    
-    data = L
-    
-    # test
-    print(dim(data))
+generateArtefacts = function() {
+    data = read.csv(args[1])
+    data2 = read.csv(args[2])
     
     outputFile(generateOverviewText(data[[1]], 
                                     data[[2]], 
@@ -185,7 +206,9 @@ generateArtefacts = function(L) {
                                  data[[8]]), 
                artefactFileNames[2])
     
-    outputFile(genericFileContent[3], 
+    outputFile(generateAppendixB(data2[[1]], 
+                                 data2[[19]], 
+                                 data2[[38]]), 
                artefactFileNames[3])
 }
 
@@ -198,12 +221,12 @@ generateArtefacts = function(L) {
 # Program Logic Start ----
 ##
 
-if (length(args) != 1) {
+if (length(args) != 2) {
     cat(errorMessages[1])
 } else if (artefactFileNames %in% dir()) {
     cat(errorMessages[2])
 } else if (file.exists(args)) {
-    generateArtefacts(read.csv(args))
+    generateArtefacts()
 } else {
     cat(errorMessages[3])
 }
