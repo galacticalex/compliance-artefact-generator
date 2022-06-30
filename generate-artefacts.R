@@ -16,9 +16,9 @@
 # 
 # 109. Function Definitions
 # 
-# 221. Program Logic
+# 222. Program Logic
 # 
-# 240. Environment Cleanup
+# 241. Environment Cleanup
 # 
 ##
 
@@ -142,7 +142,8 @@ generateOverviewText = function(softwareName, componentNames, licences) {
 
 generateAppendixA = function(licences, deps_licences) {
     d = unlist(strsplit(deps_licences, " AND "))
-    l = unique(c(licences, d))
+    l = unlist(strsplit(licences, " AND "))
+    l = unique(c(l, d))
     l = l[l != "N/A"]
     first = rep("https://raw.githubusercontent.com/spdx/license-list-data/master/text/", length(l))
     last = rep(".txt", length(l))
@@ -213,7 +214,7 @@ generateArtefacts = function() {
 }
 
 ##
-# Function Definitions Start ----
+# Function Definitions End ----
 ##
 
 
